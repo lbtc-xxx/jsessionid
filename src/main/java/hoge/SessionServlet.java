@@ -2,10 +2,7 @@ package hoge;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.*;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -29,10 +26,20 @@ public class SessionServlet extends HttpServlet {
         writer.write("<a href=\"" + url + "\">");
         writer.write(url);
         writer.write("</a>");
-        writer.write("<p>");
         writer.write("<p>isNew: " + session.isNew() + "</p>");
         writer.write("<p>" + KEY + ": " + value + "</p>");
-        writer.write("</p>");
+
+        if (request.getCookies() != null) {
+            writer.write("<p>Cookies:</p>");
+            writer.write("<ul>");
+            for (Cookie cookie : request.getCookies()) {
+                writer.write("<li>" + cookie.getName() + "=" + cookie.getValue() + "</li>");
+            }
+            writer.write("</ul>");
+        } else {
+            writer.write("<p>request.getCookies() returned null</p>");
+        }
+
         writer.write("</html>");
 
         session.setAttribute(KEY, ++value);
